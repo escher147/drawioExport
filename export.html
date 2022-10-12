@@ -1,0 +1,84 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script>
+            mxBasePath = 'drawio/mxgraph';
+            STENCIL_PATH = 'drawio/stencils';
+            isLocalStorage = false;
+            mxLoadStylesheets = false;
+        </script>
+        <script src="drawio/mxgraph/app.min.js"></script>
+        <script src="drawio/mxgraph/shapes-14-6-5.min.js"></script>
+        <script src="drawio/mxgraph/stencils.min.js"></script>
+        <script src="drawio/mxgraph/extensions.min.js"></script>
+        <script>
+            EditorUi.prototype.isLocalFileSave = () => true;
+            EditorUi.prototype.request = { 
+                send: () => true 
+            };
+            EditorUi.prototype.spinner = { 
+                spin: () => true,
+                stop: () => true
+            };
+            function exportImage(xml, format, embedImages) {
+
+                // Parses XML
+                const xmlDoc = mxUtils.parseXml(xml);
+
+			    let diagrams = null;
+                // Handles mxfile
+                if (xmlDoc.documentElement.nodeName == 'mxfile')
+                {
+                    diagrams = xmlDoc.documentElement.getElementsByTagName('diagram');
+                }
+                return Array.from(diagrams).map(diagram => {
+                    // to avoid data race
+                    const ui = Object.assign({}, EditorUi.prototype);
+                    
+                    const element = document.createElement('div');
+                    const graph = new Graph(element);
+                    ui.editor = { graph: graph, isCorsEnabledForUrl: () => true };
+                    let models = diagram.getElementsByTagName('mxGraphModel');
+                    let modelNode = (models.length > 0) ? models[0] : null;
+                    let clone = diagram;
+                    clone = diagram.cloneNode(false);
+					mxUtils.setTextContent(clone, Graph.compressNode(modelNode));
+                    const diagramXmlDoc = mxUtils.parseXml(Graph.decompress(mxUtils.getTextContent(clone)));
+                    graph.getModel().clear();
+                    
+                    // Parses XML into graph
+                    const codec = new mxCodec(diagramXmlDoc);
+                    const model = graph.getModel();
+                    codec.decode(diagramXmlDoc.documentElement, model);
+                    return new Promise(resolve => {
+                        ui.saveData = function(filename, format, data, mime, base64Encoded) {
+                            element.remove();
+                            resolve({ data: data, encoding: base64Encoded ? 'base64' : 'utf8' });
+                        };
+                        if (format == 'svg') {
+                            // ui.exportSvg(
+                            //     1, false, true, false,true, false, '0', true, false, 'auto', null, 'diagram',false
+                            // );
+                            let svgRoot = graph.getSvg('#FFFFFF', 1, '0', true,null, true, null, null, null, null, true, null,'diagram');
+                            ui.saveData('test', 'svg', mxUtils.getXml(svgRoot), 'image/svg+xml')
+                        } else {
+                            ui.exportImage(
+                                /* scale */ 1.0,
+                                /* transparentBackground */ true,
+                                /* ignoreSelection */ null,
+                                /* addShadow */ null,
+                                /* editable */ null,
+                                /* border */ null,
+                                /* noCrop */ null,
+                                /* currentPage */ null,
+                                /* format */ format,
+                            );
+                        }
+                    });
+                });
+            }
+        </script>
+    </head>
+    <body>
+    </body>
+</html>
