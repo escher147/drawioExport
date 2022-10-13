@@ -1,62 +1,22 @@
 {
-  "_from": "drawioex",
-  "_id": "drawioex@0.2.0",
-  "_inBundle": false,
-  "_integrity": "sha512-oKG45jRn9hknvfjlwl740AkzUPy/bBk1vRN7K++w3DHjoL3/90AcxLeeZ/gurU6UjCIY+/jNoVVOj6hCGxmUqg==",
-  "_location": "/drawioex",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "tag",
-    "registry": true,
-    "raw": "drawioex",
-    "name": "drawioex",
-    "escapedName": "drawioex",
-    "rawSpec": "",
-    "saveSpec": null,
-    "fetchSpec": "latest"
-  },
-  "_requiredBy": [
-    "#USER"
-  ],
-  "_resolved": "https://registry.npmmirror.com/drawioex/-/drawioex-0.2.0.tgz",
-  "_shasum": "5699afd9972512b3f1ef3c7bc98aac49e26582a3",
-  "_spec": "drawioex",
-  "_where": "C:\\Users\\celet",
-  "author": {
-    "name": "Kazuki Negoro",
-    "email": "negokaz@gmail.com",
-    "url": "https://github.com/negokaz/"
-  },
   "bin": {
     "drawioex": "app.js"
   },
-  "bugs": {
-    "url": "https://github.com/negokaz/drawioex/issues"
-  },
   "bundleDependencies": false,
   "dependencies": {
-    "commander": "^2.19.0",
-    "fs": "^0.0.1-security",
     "puppeteer": "^1.12.2"
   },
   "deprecated": false,
-  "description": "Export images from draw.io documents",
-  "homepage": "https://github.com/negokaz/drawioex",
+  "description": "Export svg from draw.io documents",
   "keywords": [
     "draw.io",
-    "svg",
-    "png"
+    "svg"
   ],
   "license": "MIT",
-  "name": "drawioex",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/negokaz/drawioex.git"
-  },
+  "name": "drawioexport",
   "scripts": {
     "fetch-drawio": "bin/fetch-drawio",
-    "start": "node app.js",
-    "test": "test/test.sh"
+    "start": "node app.js"
   },
   "version": "0.2.0"
 }
